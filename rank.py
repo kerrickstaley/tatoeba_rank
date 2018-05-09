@@ -4,7 +4,10 @@ import sys
 import unicodedata
 
 IGNORE_WORDS = frozenset([
-  '汤姆',  # "Tom"
+  '汤姆',  # "Tom" (simplified)
+  '湯姆',  # "Tom" (traditional)
+  '玛丽',  # "Mary" (simplified)
+  '瑪麗',  # "Mary" (traditional)
 ])
 
 
