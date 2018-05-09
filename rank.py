@@ -78,12 +78,19 @@ def extract_sentence_from_line(line):
 def main():
   sr = SentenceRanker()
 
-  with open('sentences_chinese.csv') as f:
-    lines = f.read().splitlines(True)
-    ranked_lines = [(sr.rank(extract_sentence_from_line(l)), l) for l in lines]
+  with open('sentences_filtered.csv') as f:
+    ranked_cmn_lines = []
+    for line in f:
+      id_, lang, sentence = line.split('\t')
 
-  ranked_lines.sort()
-  for _, line in ranked_lines[:10]:
+      if lang != 'cmn':
+        continue
+
+      ranked_cmn_lines.append((sr.rank(sentence), line))
+
+  ranked_cmn_lines.sort()
+
+  for _, line in ranked_cmn_lines[:10]:
     print(line, end='')
 
 
