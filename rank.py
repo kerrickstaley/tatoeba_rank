@@ -11,7 +11,7 @@ IGNORE_WORDS = frozenset([
 ])
 
 
-class WordRanker:
+class WordRankerSubtlex:
   def __init__(self):
     self.rank_map = {}
     with open('subtlex_ch.tsv') as f:
@@ -24,6 +24,34 @@ class WordRanker:
 
   def rank(self, word):
     # returns None if word rank is unknown
+    return self.rank_map.get(word)
+
+
+class WordRankerTatoeba:
+  # this is really inefficient, we're reading the file and cut()ing the sentences twice ¯\_(ツ)_/¯
+  # also code duplication
+  def __init__(self):
+    counts = {}
+    with open('sentences_filtered.csv') as f:
+      for line in f:
+        id_, lang, sentence = line.strip().split('\t')
+        for word in jieba.cut(sentence):
+          # we want to consider things like 的 which are "Letter, other" ("Lo")
+          # but not things like 。 which are "Punctuation, other" ("Po")
+          if unicodedata.category(word[0]) != 'Lo':
+            continue
+          if word in IGNORE_WORDS:
+            continue
+
+          counts.setdefault(word, 0)
+          counts[word] += 1
+
+
+    self.rank_map = {
+        w: i + 1 for i, (_, w) in enumerate(reversed(sorted(counts, key=counts.get)))  # obfuscated af ¯\_(ツ)_/¯
+    }
+
+  def rank(self, word):
     return self.rank_map.get(word)
 
 
@@ -43,7 +71,7 @@ class CharacterRanker:
 
 class SentenceRanker:
   def __init__(self):
-    self.wr = WordRanker()
+    self.wrs = WordRankerSubtlex()
     self.cr = CharacterRanker()
 
   def rank(self, sentence):
@@ -57,7 +85,7 @@ class SentenceRanker:
       if word in IGNORE_WORDS:
         continue
 
-      word_rank = self.wr.rank(word)
+      word_rank = self.wrs.rank(word)
       if word_rank:
         ranks.append(word_rank)
         continue
