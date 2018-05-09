@@ -84,7 +84,7 @@ def main():
   with open('sentences_filtered.csv') as f:
     ranked_cmn_lines = []
     for line in f:
-      id_, lang, sentence = line.split('\t')
+      id_, lang, sentence = line.strip().split('\t')
 
       if lang != 'cmn':
         continue
