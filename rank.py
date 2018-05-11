@@ -89,6 +89,7 @@ class CharacterRanker:
 class SentenceRanker:
   def __init__(self):
     self.wrs = WordRankerSubtlex()
+    self.wrt = WordRankerTatoeba()
     self.cr = CharacterRanker()
 
   def rank(self, sentence):
@@ -107,10 +108,8 @@ class SentenceRanker:
         ranks.append(word_rank)
         continue
 
-      char_ranks = [self.cr.rank(c) for c in word]
-      char_ranks = [r for r in char_ranks if r]
-      if char_ranks:
-        ranks.append(max(char_ranks))
+      word_rank = self.wrt.rank(word)
+      ranks.append(word_rank)
 
     if not ranks:
       print(f'WARNING: Could not rank sentence {sentence}', file=sys.stderr)
