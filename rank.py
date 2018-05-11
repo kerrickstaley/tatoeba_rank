@@ -113,7 +113,7 @@ class SentenceRanker:
 
     if not ranks:
       print(f'WARNING: Could not rank sentence {sentence}', file=sys.stderr)
-      return float('inf')
+      return None
 
     return sum(ranks) / len(ranks)
 
@@ -133,7 +133,10 @@ def main():
       if lang != 'cmn':
         continue
 
-      ranked_cmn_lines.append((sr.rank(sentence), line))
+      rank = sr.rank(sentence)
+
+      if rank is not None:
+        ranked_cmn_lines.append((rank, line))
 
   ranked_cmn_lines.sort()
 
