@@ -130,5 +130,5 @@ def main():
     print(line, end='')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' and not hasattr(sys, 'ps1'):
   main()
