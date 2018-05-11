@@ -35,6 +35,10 @@ class WordRankerTatoeba:
     with open('sentences_filtered.csv') as f:
       for line in f:
         id_, lang, sentence = line.strip().split('\t')
+
+        if lang != 'cmn':
+          continue
+
         for word in jieba.cut(sentence):
           # we want to consider things like 的 which are "Letter, other" ("Lo")
           # but not things like 。 which are "Punctuation, other" ("Po")
@@ -46,10 +50,11 @@ class WordRankerTatoeba:
           counts.setdefault(word, 0)
           counts[word] += 1
 
+    self.rank_map = {}
 
-    self.rank_map = {
-        w: i + 1 for i, (_, w) in enumerate(reversed(sorted(counts, key=counts.get)))  # obfuscated af ¯\_(ツ)_/¯
-    }
+    words_sorted_by_count = sorted(counts, key=counts.get)
+    for i, word in enumerate(reversed(words_sorted_by_count)):
+      self.rank_map[word] = i + 1
 
   def rank(self, word):
     return self.rank_map.get(word)
