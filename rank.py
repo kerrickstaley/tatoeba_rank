@@ -140,7 +140,7 @@ def main():
 
   ranked_cmn_lines.sort()
 
-  for _, line in ranked_cmn_lines[:10]:
+  for rank, line in ranked_cmn_lines:
     print(line, end='')
 
 
