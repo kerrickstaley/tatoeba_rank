@@ -53,8 +53,20 @@ class WordRankerTatoeba:
     self.rank_map = {}
 
     words_sorted_by_count = sorted(counts, key=counts.get)
+
+    last_count = 0
+    last_rank = 0
     for i, word in enumerate(reversed(words_sorted_by_count)):
-      self.rank_map[word] = i + 1
+      # for words that have the same count, give them the same (tied) rank
+      if counts[word] == last_count:
+        rank = last_rank
+      else:
+        rank = i + 1
+
+      self.rank_map[word] = rank
+
+      last_count = counts[word]
+      last_rank = rank
 
   def rank(self, word):
     return self.rank_map.get(word)
