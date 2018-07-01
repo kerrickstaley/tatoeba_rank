@@ -27,3 +27,9 @@ links_filtered.csv: filter_links.py links.csv sentences_chinese.csv sentences_en
 
 sentences_traditional.csv: filter_traditional.py sentences_chinese.csv cedict_1_0_ts_utf-8_mdbg.txt
 	./filter_traditional.py cedict_1_0_ts_utf-8_mdbg.txt sentences_chinese.csv > $@
+
+sentences_traditional_ranked.csv: rank.py subtlex_ch.tsv sentences_traditional.csv
+	./rank.py subtlex_ch.tsv hanziDB.csv sentences_traditional.csv > $@
+
+trad_eng.yaml: join_chinese_and_english.py sentences_traditional_ranked.csv sentences_english.csv links_filtered.csv
+	./join_chinese_and_english.py sentences_traditional_ranked.csv sentences_english.csv links_filtered.csv > $@

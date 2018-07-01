@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 import jieba
+import opencc
 import sys
 import unicodedata
+
+subtlex_file = sys.argv[1]
+hanzidb_file = sys.argv[2]
+sentences_file = sys.argv[3]
 
 IGNORE_WORDS = frozenset([
   '汤姆',  # "Tom" (simplified)
@@ -14,7 +19,7 @@ IGNORE_WORDS = frozenset([
 class WordRankerSubtlex:
   def __init__(self):
     self.rank_map = {}
-    with open('subtlex_ch.tsv') as f:
+    with open(subtlex_file) as f:
       next(f)  # skip first line
       for rank, line in enumerate(f):
         word = line.split()[0]
@@ -24,7 +29,14 @@ class WordRankerSubtlex:
 
   def rank(self, word):
     # returns None if word rank is unknown
-    return self.rank_map.get(word)
+    if word in self.rank_map:
+      return self.rank_map[word]
+
+    simp_word = opencc.convert(word)
+    if simp_word in self.rank_map:
+      return self.rank_map[simp_word]
+
+    return None
 
 
 class WordRankerTatoeba:
@@ -32,7 +44,7 @@ class WordRankerTatoeba:
   # also code duplication
   def __init__(self):
     counts = {}
-    with open('sentences_filtered.csv') as f:
+    with open(sentences_file) as f:
       for line in f:
         id_, lang, sentence = line.strip().split('\t')
 
@@ -75,7 +87,7 @@ class WordRankerTatoeba:
 class CharacterRanker:
   def __init__(self):
     self.rank_map = {}
-    with open('hanziDB.csv') as f:
+    with open(hanzidb_file) as f:
       next(f)  # skip first line
       for rank, line in enumerate(f):
         word = line.split(',')[1]
@@ -125,7 +137,7 @@ def extract_sentence_from_line(line):
 def main():
   sr = SentenceRanker()
 
-  with open('sentences_filtered.csv') as f:
+  with open(sentences_file) as f:
     ranked_cmn_lines = []
     for line in f:
       id_, lang, sentence = line.strip().split('\t')
