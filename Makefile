@@ -36,3 +36,6 @@ trad_eng.yaml: join_chinese_and_english.py sentences_traditional_ranked.csv sent
 
 trad_simp_eng.yaml: add_simp.py trad_eng.yaml
 	./add_simp.py trad_eng.yaml > $@
+
+trad_simp_eng_pinyin.yaml: add_pinyin.py trad_simp_eng.yaml
+	./add_pinyin.py trad_simp_eng.yaml > $@
