@@ -33,3 +33,6 @@ sentences_traditional_ranked.csv: rank.py subtlex_ch.tsv sentences_traditional.c
 
 trad_eng.yaml: join_chinese_and_english.py sentences_traditional_ranked.csv sentences_english.csv links_filtered.csv
 	./join_chinese_and_english.py sentences_traditional_ranked.csv sentences_english.csv links_filtered.csv > $@
+
+trad_simp_eng.yaml: add_simp.py trad_eng.yaml
+	./add_simp.py trad_eng.yaml > $@
