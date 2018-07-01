@@ -21,7 +21,7 @@ def get_pinyin(hanzi):
 
 
 for group in data:
-  group['pinyin'] = get_pinyin(group['trad'])
+  group['pinyin'] = get_pinyin(group['simp'])
 
 
 yaml.dump(data, sys.stdout, allow_unicode=True, default_flow_style=False)
