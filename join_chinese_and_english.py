@@ -26,12 +26,15 @@ class UnionFind:
     return rv
 
   def union(self, a, b):
-    if self.find(a) == b or self.find(b) == a:
-      return
-
-    self.parent[a] = b
+    if a not in self.parent:
+      self.parent[a] = a
     if b not in self.parent:
       self.parent[b] = b
+
+    if self.find(a) == self.find(b):
+      return
+
+    self.parent[a] = self.find(b)
 
 
 uf = UnionFind()
