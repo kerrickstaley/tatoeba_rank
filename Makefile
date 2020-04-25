@@ -1,5 +1,9 @@
 .DEFAULT_GOAL := trad_simp_eng_pinyin.yaml
 
+update:
+	rm -f sentences.tar.bz2 links.tar.bz2
+	make
+
 sentences.tar.bz2:
 	curl -L http://downloads.tatoeba.org/exports/sentences.tar.bz2 > $@
 
