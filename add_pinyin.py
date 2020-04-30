@@ -7,7 +7,7 @@ import yaml
 trad_simp_eng_file = sys.argv[1]
 
 with open(trad_simp_eng_file) as f:
-  data = yaml.load(f)
+  data = yaml.full_load(f)
 
 
 def get_pinyin(hanzi):
