@@ -8,19 +8,21 @@ sentences.tar.bz2:
 	curl -L http://downloads.tatoeba.org/exports/sentences.tar.bz2 > $@
 
 sentences.csv: sentences.tar.bz2
-	tar -xjf $< --touch
+	tar -xjf $<
+	touch $@
 
 links.tar.bz2:
 	curl -L http://downloads.tatoeba.org/exports/links.tar.bz2 > $@
 
 links.csv: links.tar.bz2
-	tar -xjf $< --touch
+	tar -xjf $<
+	touch $@
 
 cedict_1_0_ts_utf-8_mdbg.txt.gz:
 	curl -L https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz > $@
 
 cedict_1_0_ts_utf-8_mdbg.txt: cedict_1_0_ts_utf-8_mdbg.txt.gz
-	zcat $< > $@
+	zcat < $< > $@
 
 sentences_chinese.csv: sentences.csv
 	grep -P '^[^\t]+\tcmn\t' $< > $@
